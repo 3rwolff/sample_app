@@ -11,5 +11,13 @@ module SessionsHelper
         @current_user ||= User.find_by(id: session[:user_id])
       end
     end
-  end
+
+    # NOTE: Helper methods are not available in Tests so there is also a
+    # test helper method to check if a user is logged in called : 'is_logged_in?'
+    # Returns true if the user is logged in, false otherwise.
+    def logged_in?
+      !current_user.nil?
+    end
+
+end
   
