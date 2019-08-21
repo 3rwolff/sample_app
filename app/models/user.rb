@@ -32,11 +32,13 @@ class User < ApplicationRecord
     #puts "### REMEMBER TOKEN: #{self.remember_token} ###"
     update_attribute(:remember_digest, User.digest(remember_token))
   end
-
+  
   # Returns true if the given token matches the digest.
   def authenticated?(attribute, token)
     digest = send("#{attribute}_digest")
+    puts "#### attribute: #{attribute} token: #{token} digest: #{digest} ####"
     return false if digest.nil?
+    puts " ----- HERE -----"
     BCrypt::Password.new(digest).is_password?(token)
   end
 
@@ -55,7 +57,6 @@ class User < ApplicationRecord
     # Creates and assigns the activation token and digest.
     def create_activation_digest
       self.activation_token  = User.new_token
-      #puts "### ACTIVATION TOKEN: #{self.activation_token} ###"
       self.activation_digest = User.digest(activation_token)
     end
 
