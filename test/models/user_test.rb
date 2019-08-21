@@ -75,4 +75,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.authenticated?(:remember, '') # fails before the input is evaluated so an empty input is okay
   end
 
+  test "associated microposts should be destroyed" do
+    @user.save
+    @user.microposts.create!(content: "Lorem ipsum")
+    assert_difference 'Micropost.count', -1 do
+      @user.destroy
+    end
+  end
+
 end
