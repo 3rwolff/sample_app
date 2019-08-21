@@ -36,15 +36,23 @@ class User < ApplicationRecord
   # Returns true if the given token matches the digest.
   def authenticated?(attribute, token)
     digest = send("#{attribute}_digest")
-    puts "#### attribute: #{attribute} token: #{token} digest: #{digest} ####"
     return false if digest.nil?
-    puts " ----- HERE -----"
     BCrypt::Password.new(digest).is_password?(token)
   end
 
   # Forgets a user.
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  # Activates an account.
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  # Sends activation email.
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
   end
 
   private
